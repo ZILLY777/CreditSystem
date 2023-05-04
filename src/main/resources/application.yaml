@@ -1,0 +1,47 @@
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/credit_service?characterEncoding=UTF-8
+    password: Zabava0803
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+  liquibase:
+    change-log: db/changelog/changelog.yaml
+    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8092
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+    instances:
+      basicBreaker:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+        slow-call-duration-threshold: 1s
