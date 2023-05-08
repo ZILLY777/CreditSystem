@@ -1,5 +1,6 @@
 package com.example.credit.service.serviceInterfaces;
 
+import com.example.credit.constants.OrderStatusEnum;
 import com.example.credit.dto.LoanOrderDTO;
 import com.example.credit.entity.tables.LoanOrder;
 import com.example.credit.exceptions.LoanAlreadyApproved;
@@ -20,6 +21,6 @@ public interface OrderService {
         return entity.getOrderId();
     }
 
-    UUID getOrderStatus(UUID uuid) throws Exception;
+    OrderStatusEnum getOrderStatus(UUID uuid) throws Exception;
     void deleteOrder(LoanOrderDTO loanOrderDTO) throws Exception;
 }

@@ -34,7 +34,6 @@ public class OrderServiceImpl implements OrderService {
             throw new TariffNotFoundException();
         }
         Optional<LoanOrder> userLoanOrder = loanOrderRepository.findPaymentByUserIdAndTariffId(loanOrderDTO.getUserId(), loanOrderDTO.getTariffId());
-        System.out.println(userLoanOrder);
         if (userLoanOrder.isEmpty()) {
             LoanOrder entity =  loanOrderMapper.loanOrderDtoToLoanOrder(loanOrderDTO);
             entity.setStatus(OrderStatusEnum.IN_PROGRESS);
@@ -58,7 +57,6 @@ public class OrderServiceImpl implements OrderService {
 
     private UUID handleRefusedStatus(Optional<LoanOrder> entity) throws TryLaterException {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        System.out.println(TimeUnit.MILLISECONDS.toSeconds(timestamp.getTime() - entity.get().getTimeUpdate().getTime()));
         if ( TimeUnit.MILLISECONDS.toSeconds(timestamp.getTime() - entity.get().getTimeUpdate().getTime()) < 120) {
             throw new TryLaterException();
         }
@@ -67,12 +65,12 @@ public class OrderServiceImpl implements OrderService {
         return loanOrder.getOrderId();
     }
 
-    public UUID getOrderStatus(UUID uuid) throws OrderNotFoundException {
+    public OrderStatusEnum getOrderStatus(UUID uuid) throws OrderNotFoundException {
         Optional<LoanOrder> order = loanOrderRepository.findOrderByOrderId(String.valueOf(uuid));
         if(order.isEmpty()){
             throw new OrderNotFoundException();
         }
-        return order.get().getOrderId();
+        return order.get().getStatus();
     }
 
     public void deleteOrder(LoanOrderDTO loanOrderDTO) throws OrderNotFoundException, OrderImpossibleToDelete {

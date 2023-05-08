@@ -1,6 +1,7 @@
 package com.example.credit.exceptions.handlers;
 
-import com.example.credit.entity.response.ResponseBasicError;
+import com.example.credit.entity.response.Generic.ResponseBasicError;
+import com.example.credit.entity.response.ResponseSubError;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,8 @@ public class CircuitBreakerExceptionHandler {
 
     @ExceptionHandler({ CallNotPermittedException.class })
     public ResponseEntity<Object> handleCallNotPermitted(Exception ex, WebRequest request) {
-        ResponseBasicError apiError = new ResponseBasicError(
-                new ResponseBasicError.SubError(ex.getLocalizedMessage(), "Сервис временно недоступен"));
+        ResponseBasicError<ResponseSubError> apiError = ResponseBasicError.wrap(
+                new ResponseSubError(ex.getLocalizedMessage(), "Сервис временно недоступен"));
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

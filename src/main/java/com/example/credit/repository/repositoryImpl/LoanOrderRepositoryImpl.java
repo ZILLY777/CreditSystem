@@ -32,7 +32,7 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
 
     private static final String FIND_ORDER_BY_OFFER_ID = "SELECT * FROM loan_order WHERE order_id = ?";
 
-    private static final String FIND_ORDER_BY_USER_ID_AND_TARIFF_ID = "SELECT * FROM loan_order WHERE user_id = ? AND tariff_id = ? ORDER BY order_id DESC";
+    private static final String FIND_ORDER_BY_USER_ID_AND_TARIFF_ID = "SELECT * FROM loan_order WHERE user_id = ? AND tariff_id = ? ORDER BY id DESC";
 
     private static final String FIND_ORDER_BY_USER_ID_AND_ORDER_ID = "SELECT * FROM loan_order WHERE user_id = ? AND order_id = ?";
 
@@ -63,7 +63,6 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
 
     @Override
     public LoanOrder save(LoanOrder loanOrder) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         UUID uuid = UUID.randomUUID();
         Random rand = new Random();
         BigDecimal randomValue = BigDecimal.valueOf(0.10 + (0.80) * rand.nextDouble()).setScale(2, RoundingMode.HALF_UP);
@@ -77,7 +76,7 @@ public class LoanOrderRepositoryImpl implements LoanOrderRepository {
             ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
             ps.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
             return ps;
-        }, keyHolder);
+        });
         loanOrder.setOrderId(uuid);
         return loanOrder;
     }

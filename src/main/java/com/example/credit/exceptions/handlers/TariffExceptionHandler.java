@@ -1,6 +1,7 @@
 package com.example.credit.exceptions.handlers;
 
-import com.example.credit.entity.response.ResponseBasicError;
+import com.example.credit.entity.response.Generic.ResponseBasicError;
+import com.example.credit.entity.response.ResponseSubError;
 import com.example.credit.exceptions.TariffNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,8 @@ public class TariffExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ TariffNotFoundException.class })
     public ResponseEntity<Object> handleUnknownTariff(Exception ex, WebRequest request) {
-        ResponseBasicError apiError = new ResponseBasicError(
-                new ResponseBasicError.SubError(ex.getLocalizedMessage(), "Тарифф не найден"));
+        ResponseBasicError<ResponseSubError> apiError = ResponseBasicError.wrap(
+                new ResponseSubError(ex.getLocalizedMessage(), "Тариф не найден"));
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

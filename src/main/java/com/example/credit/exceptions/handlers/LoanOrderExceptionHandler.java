@@ -1,6 +1,7 @@
 package com.example.credit.exceptions.handlers;
 
-import com.example.credit.entity.response.ResponseBasicError;
+import com.example.credit.entity.response.Generic.ResponseBasicError;
+import com.example.credit.entity.response.ResponseSubError;
 import com.example.credit.exceptions.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,40 +15,40 @@ public class LoanOrderExceptionHandler {
 
     @ExceptionHandler({ LoanAlreadyApproved.class })
     public ResponseEntity<Object> handleApprovedLoan(Exception ex, WebRequest request) {
-        ResponseBasicError apiError = new ResponseBasicError(
-                new ResponseBasicError.SubError(ex.getLocalizedMessage(), "Кредит уже одобрен"));
+        ResponseBasicError<ResponseSubError> apiError = ResponseBasicError.wrap(
+                new ResponseSubError(ex.getLocalizedMessage(), "Кредит уже одобрен"));
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ LoanConsiderationException.class})
     public ResponseEntity<Object> handleConsideredLoan(Exception ex, WebRequest request) {
-        ResponseBasicError apiError = new ResponseBasicError(
-                new ResponseBasicError.SubError(ex.getLocalizedMessage(), "Кредит на рассмотрении"));
+        ResponseBasicError<ResponseSubError> apiError = ResponseBasicError.wrap(
+                new ResponseSubError(ex.getLocalizedMessage(), "Кредит на рассмотрении"));
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ TryLaterException.class})
     public ResponseEntity<Object> handleLaterLoan(Exception ex, WebRequest request) {
-        ResponseBasicError apiError = new ResponseBasicError(
-                new ResponseBasicError.SubError(ex.getLocalizedMessage(), "Попробуйте позже"));
+        ResponseBasicError<ResponseSubError> apiError = ResponseBasicError.wrap(
+                new ResponseSubError(ex.getLocalizedMessage(), "Попробуйте позже"));
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ OrderNotFoundException.class})
     public ResponseEntity<Object> handleLoanOrderNotFound(Exception ex, WebRequest request) {
-        ResponseBasicError apiError = new ResponseBasicError(
-                new ResponseBasicError.SubError(ex.getLocalizedMessage(), "Заявка не найдена"));
+        ResponseBasicError<ResponseSubError> apiError = ResponseBasicError.wrap(
+                new ResponseSubError(ex.getLocalizedMessage(), "Заявка не найдена"));
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ OrderImpossibleToDelete.class})
     public ResponseEntity<Object> handleLoanOrderImpossibleToDelete(Exception ex, WebRequest request) {
-        ResponseBasicError apiError = new ResponseBasicError(
-                new ResponseBasicError.SubError(ex.getLocalizedMessage(), "Заявку не возможно удалить"));
+        ResponseBasicError<ResponseSubError> apiError = ResponseBasicError.wrap(
+                new ResponseSubError(ex.getLocalizedMessage(), "Невозможно удалить заявку"));
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

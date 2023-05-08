@@ -5,6 +5,7 @@ import com.example.credit.entity.tables.LoanOrder;
 import com.example.credit.repository.repositoryInterfaces.LoanOrderRepository;
 import com.example.credit.service.serviceInterfaces.OrderJob;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class OrderJobImpl implements OrderJob {
 
     private final LoanOrderRepository loanOrderRepository;
 
+    @Async
     @Scheduled(fixedRate = 120000)
     public void changeInProgressLoanStatus() {
         List<LoanOrder> ordersList  = loanOrderRepository.findOrdersByOrderStatus(OrderStatusEnum.IN_PROGRESS.toString());

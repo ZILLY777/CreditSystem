@@ -2,7 +2,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/credit_service?characterEncoding=UTF-8
-    password: Zabava0803
+    password: postgres
     driver-class-name: org.postgresql.Driver
     username: postgres
   liquibase:
@@ -14,7 +14,7 @@ spring:
       ddl-auto: update
 
 server:
-  port: 8092
+  port: 8080
 
 management:
   health:
