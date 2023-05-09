@@ -1,0 +1,47 @@
+version: '2'
+services:
+  app:
+    image: myimage
+
+    expose:
+        - 8080
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    build:
+      dockerfile: DockerFile
+    container_name: app
+    depends_on:
+        - postgres
+        - kafka
+    environment:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/credit_service?characterEncoding=UTF-8
+        - SPRING_DATASOURCE_USERNAME=postgres
+        - SPRING_DATASOURCE_PASSWORD=postgres
+        - IMAGE_INSTALL=kernel-modules;%IMAGE_INSTALL%
+
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: "credit_service"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+        KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        KAFKA_CREATE_TOPICS: "statisticgroup:1:1"
+    depends_on:
+      - zookeeper
+
+
