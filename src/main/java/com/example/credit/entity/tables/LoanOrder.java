@@ -2,8 +2,8 @@ package com.example.credit.entity.tables;
 
 import com.example.credit.constants.OrderStatusEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -23,6 +23,7 @@ public class LoanOrder {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID orderId;
 
+    @Positive
     private long userId;
 
     private long tariffId;
@@ -34,5 +35,7 @@ public class LoanOrder {
     private Timestamp timeInsert;
 
     private Timestamp timeUpdate;
+
+    private Boolean provided;
 
 }

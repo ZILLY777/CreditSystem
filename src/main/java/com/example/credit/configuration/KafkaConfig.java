@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class KafkaConfig {
 
-    private static final String BOOTSTRAP_SERVER = "localhost:9092";
+    private static final String BOOTSTRAP_SERVER = "kafka:9092";
     private static final String GROUP_ID = "statisticgroup";
 
     @Bean

@@ -22,5 +22,10 @@ public interface LoanOrderRepository {
 
     List<LoanOrder> findOrdersByOrderStatus(String status);
 
+    List<LoanOrder> findOrdersByOrderProvided(Boolean provided);
+
     void updateOrderStatusByOrderId(String status, Timestamp updateTime, String orderId);
+
+    void updateOrderProvidedByOrderId(String orderId, Boolean provided);
+
 }

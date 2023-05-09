@@ -2,22 +2,20 @@ version: '2'
 services:
   app:
     image: myimage
-    network_mode: bridge
 
     expose:
         - 8080
     ports:
-      - 8080:8080
+      - "8080:8080"
     restart: unless-stopped
     build:
       dockerfile: DockerFile
     container_name: app
     depends_on:
         - postgres
-        - zookeeper
         - kafka
     environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/credit_service?characterEncoding=UTF-8
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/credit_service?characterEncoding=UTF-8
         - SPRING_DATASOURCE_USERNAME=postgres
         - SPRING_DATASOURCE_PASSWORD=postgres
         - IMAGE_INSTALL=kernel-modules;%IMAGE_INSTALL%
@@ -42,6 +40,8 @@ services:
     environment:
         KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_CREATE_TOPICS: "statisticgroup:1:3"
+        KAFKA_CREATE_TOPICS: "statisticgroup:1:1"
+    depends_on:
+      - zookeeper
 
 

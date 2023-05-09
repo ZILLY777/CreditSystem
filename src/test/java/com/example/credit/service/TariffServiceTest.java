@@ -1,7 +1,9 @@
 package com.example.credit.service;
 
+import com.example.credit.dto.LoanOrderDTO;
 import com.example.credit.entity.tables.Tariff;
 import com.example.credit.mapper.TariffMapper;
+import com.example.credit.service.serviceImpl.OrderServiceImpl;
 import com.example.credit.service.serviceImpl.TariffServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;

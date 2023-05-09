@@ -9,6 +9,7 @@ import com.example.credit.mapper.LoanOrderMapper;
 import com.example.credit.repository.repositoryInterfaces.LoanOrderRepository;
 import com.example.credit.repository.repositoryInterfaces.TariffRepository;
 import com.example.credit.service.serviceInterfaces.OrderService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -27,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final LoanOrderMapper loanOrderMapper;
 
+    @CircuitBreaker(name = "basicBreaker")
     public UUID postOrder(LoanOrderDTO loanOrderDTO) throws TariffNotFoundException, LoanConsiderationException, LoanAlreadyApproved, TryLaterException {
 
         Optional<Tariff> tariffOptional = tariffRepository.findTariffById(loanOrderDTO.getTariffId());
@@ -42,7 +45,6 @@ public class OrderServiceImpl implements OrderService {
             return handleStatus(userLoanOrder);
         }
     }
-
     private UUID handleStatus(Optional<LoanOrder> entity) throws LoanConsiderationException, LoanAlreadyApproved, TryLaterException {
         OrderStatusEnum status = entity.get().getStatus();
         switch (status) {
@@ -54,7 +56,6 @@ public class OrderServiceImpl implements OrderService {
             default -> throw new UnknownError();
         }
     }
-
     private UUID handleRefusedStatus(Optional<LoanOrder> entity) throws TryLaterException {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         if ( TimeUnit.MILLISECONDS.toSeconds(timestamp.getTime() - entity.get().getTimeUpdate().getTime()) < 120) {
@@ -65,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
         return loanOrder.getOrderId();
     }
 
+    @CircuitBreaker(name = "basicBreaker")
     public OrderStatusEnum getOrderStatus(UUID uuid) throws OrderNotFoundException {
         Optional<LoanOrder> order = loanOrderRepository.findOrderByOrderId(String.valueOf(uuid));
         if(order.isEmpty()){
@@ -73,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
         return order.get().getStatus();
     }
 
+    @CircuitBreaker(name = "basicBreaker")
     public void deleteOrder(LoanOrderDTO loanOrderDTO) throws OrderNotFoundException, OrderImpossibleToDelete {
         Optional<LoanOrder> order = loanOrderRepository.findPaymentByUserIdAndOrderId(loanOrderDTO.getUserId(),
                 String.valueOf(loanOrderDTO.getOrderId()));
