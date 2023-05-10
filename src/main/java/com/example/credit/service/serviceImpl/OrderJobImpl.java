@@ -49,6 +49,7 @@ public class OrderJobImpl implements OrderJob {
     }
 
     @Override
+    @Scheduled(fixedRate = 120000)
     public void checkProvidedLoanStatus() {
         List<LoanOrder> ordersList  = loanOrderRepository.findOrdersByOrderProvided(false);
         for (LoanOrder order:
